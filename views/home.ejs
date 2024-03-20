@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Blog Name</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 1em;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1em;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 1em;
+        }
+
+        section {
+            margin-bottom: 2em;
+        }
+
+        #post-form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5em;
+        }
+
+        #post-form h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 1em 0 0.5em;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 0.5em;
+            margin-bottom: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 0.5em 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #latest-posts article {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5em;
+            margin-bottom: 2em;
+        }
+
+        #latest-posts h2 {
+            color: #333;
+        }
+
+        #latest-posts p {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        #latest-posts a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>BLOGS</h1>
+        <p>Welcome to the world of Blog Balu</p>
+    </header>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Categories</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <% if(session.user_id) { %>
+            <a href="/logout" class="btn btn-primary">Logout</a>
+        <% } %>
+    </nav>
+
+    <main>
+        <section id="post-form">
+            <h2>Create a New Blog Post</h2>
+            <form action="/submit_post" method="post">
+                <label for="post-title">Title:</label>
+                <input type="text" id="post-title" name="post-title" required>
+
+                <label for="post-content">Content:</label>
+                <textarea id="post-content" name="post-content" rows="8" required></textarea>
+
+                <button type="submit">Submit Post</button>
+            </form>
+        </section>
+
+        <section id="latest-posts">
+            <% if (blogPosts && blogPosts.length > 0) { %>
+                <% blogPosts.forEach(post => { %>
+                    <article>
+                        <h2>Posted By: <%= post.Author %></h2>
+                        <h2><%= post.Title %></h2>
+                        <p class="post-meta">Published on <%= post.Timestamp %></p>
+                        <p><%= post.Content %></p>
+                        <h1><%= post.BlogID %></h1>
+        
+                        <!-- Display the like count -->
+                        <p>Likes: <%= post.LikeCount || 0 %></p>
+        
+                        <!-- Like button -->
+                        <form action="/like" method="post">
+                            <input type="hidden" name="postId" value="<%= post.BlogID %>">
+                            
+                           
+        
+                            <button type="submit">Like</button>
+                        </form>
+        
+                        <a href="/post-details/<%= post.BlogID %>" class="read-more">Read more</a>
+                    </article>
+                <% }); %>
+            <% } else { %>
+                <p>No blog posts available.</p>
+            <% } %>
+        </section>
+        
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Your Blog Name. All rights reserved.</p>
+    </footer>
+</body>
+</html>
